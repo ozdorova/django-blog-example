@@ -16,7 +16,7 @@ My Blog
             </a>
         </h2>
         <p class="date">
-            Published {{ post.publish }} by {{ post.author }}
+            Опубликовано {{ post.publish }} | {{ post.author }}
         </p>
         {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
