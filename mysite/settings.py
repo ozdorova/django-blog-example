@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'taggit',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,5 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = "django.test@internet.ru"
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
+
+SITE_ID = 1
