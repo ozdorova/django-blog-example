@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 # Create your views here.
 
 
@@ -123,11 +124,17 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchVector('title', 'body', config='russian')
-            search_query = SearchQuery(query, config='russian')
+            
+            # results = Post.published.annotate(
+            #     similarity=TrigramSimilarity('title', query),
+            # ).filter(similarity__gt=0.1).order_by('-similarity')  
+            
+            search_vector = SearchVector('title', weight='A', config='russian') + SearchVector('body', weight='B', config='russian') # поля в которых будет производится поиск
+            search_query = SearchQuery(query, config='russian') # поискововй запрос
+            #результат поиска. создаются дополнительные поля search и rank
             results = Post.published.annotate(search=search_vector,
                                             rank=SearchRank(search_vector, search_query)
-                                            ).filter(search=search_query).order_by('-rank')
+                                            ).filter(ranl__gre=0.3).order_by('-rank')
     
     return render(request,
                 'blog/post/search.html',
